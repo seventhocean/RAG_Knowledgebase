@@ -249,10 +249,13 @@ createApp({
                                 } else if (data.type === 'trace') {
                                     this.messages[botMsgIdx].ragTrace = data.rag_trace;
                                 } else if (data.type === 'rag_step') {
+                                    console.log('[RAG_STEP] Received:', data.step);
                                     if (!this.messages[botMsgIdx].ragSteps) {
                                         this.messages[botMsgIdx].ragSteps = [];
+                                        console.log('[RAG_STEP] Initialized ragSteps array');
                                     }
                                     this.messages[botMsgIdx].ragSteps.push(data.step);
+                                    console.log('[RAG_STEP] ragSteps length:', this.messages[botMsgIdx].ragSteps.length);
                                 } else if (data.type === 'error') {
                                     this.messages[botMsgIdx].isThinking = false;
                                     this.messages[botMsgIdx].text += `\n[Error: ${data.content}]`;
