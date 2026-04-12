@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SuperMew is a RAG (Retrieval-Augmented Generation) chatbot application with:
+WinterAI is a RAG (Retrieval-Augmented Generation) chatbot application with:
 - **Backend**: FastAPI + LangChain/LangGraph + PostgreSQL + Redis + Milvus
 - **Frontend**: Vue 3 (CDN) + marked + highlight.js, served as static files
 - **Core features**: Hybrid search (dense + BM25 sparse), Auto-merging retrieval, query rewriting (Step-Back/HyDE), JWT authentication with RBAC

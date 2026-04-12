@@ -1,15 +1,15 @@
-# SuperMew 项目说明
+# WinterAI - RAG 知识库项目
 
-Agent的项目记录，方便后续持续更新与展示。
+基于 LangChain Agent 的 RAG 知识库系统，支持文档上传、混合检索、流式问答等功能。
 
 ## 本地部署
 
-### 1) 环境准备
+### (1) 环境准备
 - Python `3.12+`
 - 包管理建议：`uv`（也支持 `pip`）
 - Docker / Docker Compose（用于启动 Milvus 依赖）
 
-### 2) 使用 pyproject 安装依赖
+### (2) 使用 pyproject 安装依赖
 在项目根目录执行：
 
 ```bash
