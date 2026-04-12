@@ -212,7 +212,7 @@
                 <!-- Messages -->
                 <div v-for="(msg, index) in messages" :key="index" :class="['message', msg.isUser ? 'user-message' : 'bot-message']">
                     <!-- 思考动画（在气泡内部，RAG 步骤实时填入） -->
-                    <div v-if="!msg.isUser && msg.isThinking && !msg.text" class="message-content thinking-content">
+                    <div v-if="!msg.isUser && msg.isThinking" class="message-content thinking-content">
                         <div class="thinking-header">
                             <div class="thinking-dots">
                                 <span class="tdot"></span>
@@ -230,8 +230,21 @@
                             </div>
                         </div>
                     </div>
+                    <!-- RAG 步骤历史（思考结束后显示） -->
+                    <div v-else-if="!msg.isUser && msg.ragSteps && msg.ragSteps.length && !msg.text" class="message-content thinking-content">
+                        <div class="thinking-header">
+                            <span class="thinking-text">{{ msg.ragSteps[msg.ragSteps.length - 1].label }}</span>
+                        </div>
+                        <div class="thinking-trace-lines">
+                            <div v-for="(step, sIdx) in msg.ragSteps" :key="sIdx" class="thinking-trace-line">
+                                <span class="thinking-trace-icon">{{ step.icon || '▶' }}</span>
+                                <span class="thinking-trace-label">{{ step.label }}</span>
+                                <span v-if="step.detail" class="thinking-trace-detail">{{ step.detail }}</span>
+                            </div>
+                        </div>
+                    </div>
                     <!-- 正常回复内容 -->
-                    <div v-else class="message-content" v-html="msg.isUser ? escapeHtml(msg.text) : parseMarkdown(msg.text)"></div>
+                    <div v-else-if="msg.text" class="message-content" v-html="msg.isUser ? escapeHtml(msg.text) : parseMarkdown(msg.text)"></div>
                     <div v-if="!msg.isUser && msg.ragTrace" class="message-meta">
                         <details class="reasoning-details">
                             <summary>检索过程</summary>
