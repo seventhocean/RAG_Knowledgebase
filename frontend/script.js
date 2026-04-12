@@ -275,7 +275,7 @@ createApp({
                     }
                 } else {
                     this.messages[botMsgIdx].isThinking = false;
-                    this.messages[botMsgIdx].text = `喵呜... 出了点问题：${error.message}`;
+                    this.messages[botMsgIdx].text = `抱歉，出现了一点错误：${error.message}`;
                 }
             } finally {
                 this.isLoading = false;
@@ -311,7 +311,7 @@ createApp({
         },
 
         handleClearChat() {
-            if (confirm('确定要清空当前对话吗？喵？')) {
+            if (confirm('确定要清空当前对话吗？')) {
                 this.messages = [];
             }
         },
