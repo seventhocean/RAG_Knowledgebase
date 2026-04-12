@@ -17,9 +17,11 @@ _DEFAULT_STATE_PATH = Path(__file__).resolve().parent.parent / "data" / "bm25_st
 
 def _create_dense_embedder() -> HuggingFaceEmbeddings:
     model_name = os.getenv("EMBEDDING_MODEL", "BAAI/bge-m3")
-    device = os.getenv("EMBEDDING_DEVICE", "cpu")
+    device = os.getenv("EMBEDDING_DEVICE", "cpu").lower()
+    # 使用本地缓存路径（离线模式）
+    model_path = f"/root/.cache/huggingface/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181"
     return HuggingFaceEmbeddings(
-        model_name=model_name,
+        model_name=model_path,
         model_kwargs={"device": device},
         encode_kwargs={"normalize_embeddings": True},
     )

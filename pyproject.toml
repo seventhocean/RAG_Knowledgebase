@@ -1,5 +1,5 @@
 [project]
-name = "SuperMew"
+name = "rag-knowledgebase"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -40,3 +40,8 @@ study = [
     "chromadb>=0.5.5",
     "bilibili-api-python>=17.0.0",
 ]
+
+[[tool.uv.index]]
+name = "tsinghua"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true

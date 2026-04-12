@@ -12,7 +12,7 @@ FRONTEND_DIR = BASE_DIR / "frontend"
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Cute Cat Bot API")
+    app = FastAPI(title="冬天 AI 助手 API")
 
     @app.on_event("startup")
     async def _startup_init_db():

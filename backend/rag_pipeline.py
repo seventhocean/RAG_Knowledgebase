@@ -170,10 +170,43 @@ def grade_documents_node(state: RAGState) -> RAGState:
     question = state["question"]
     context = state.get("context", "")
     prompt = GRADE_PROMPT.format(question=question, context=context)
-    response = grader.with_structured_output(GradeDocuments).invoke(
-        [{"role": "user", "content": prompt}]
-    )
-    score = (response.binary_score or "").strip().lower()
+
+    # 尝试使用结构化输出，失败时回退到普通文本解析
+    score = None
+    try:
+        response = grader.with_structured_output(GradeDocuments).invoke(
+            [{"role": "user", "content": prompt}]
+        )
+        score = (response.binary_score or "").strip().lower()
+    except Exception as e:
+        # 结构化输出失败，尝试普通调用并手动解析
+        emit_rag_step("⚠️", f"结构化输出失败：{type(e).__name__}", "尝试回退方案...")
+        try:
+            plain_response = grader.invoke([{"role": "user", "content": prompt}])
+            response_text = plain_response.content if hasattr(plain_response, 'content') else str(plain_response)
+            # 从响应中提取 yes/no
+            response_lower = response_text.lower()
+            if "yes" in response_lower and "no" not in response_lower:
+                score = "yes"
+            elif "no" in response_lower and "yes" not in response_lower:
+                score = "no"
+            else:
+                # 尝试匹配 'yes' 或 'no' 单词边界
+                import re
+                match = re.search(r'\b(yes|no)\b', response_lower)
+                if match:
+                    score = match.group(1)
+                else:
+                    emit_rag_step("⚠️", "无法解析评分，默认跳过评估")
+                    score = None
+        except Exception as fallback_error:
+            emit_rag_step("⚠️", f"回退方案失败：{type(fallback_error).__name__}")
+            score = None
+
+    # 如果评分仍为 None，使用保守策略：假设相关（让用户看到答案）
+    if score is None:
+        score = "yes"  # 默认通过，避免过度重写
+
     route = "generate_answer" if score == "yes" else "rewrite_question"
     if route == "generate_answer":
         emit_rag_step("✅", "文档相关性评估通过", f"评分: {score}")
